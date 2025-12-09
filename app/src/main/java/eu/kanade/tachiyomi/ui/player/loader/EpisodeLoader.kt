@@ -118,7 +118,7 @@ class EpisodeLoader {
          * @param source the online source of the episode.
          */
         private suspend fun getHostersOnHttp(episode: Episode, source: HttpSource): List<Hoster> {
-            // TODO(1.6): Remove else block when dropping support for ext lib <1.6
+            // TODO(16): Remove else block when dropping support for ext lib <1.6
             return if (checkHasHosters(source)) {
                 source.getHosterList(episode.toSEpisode())
                     .let { source.run { it.sortHosters() } }
@@ -210,7 +210,7 @@ class EpisodeLoader {
                 .parseVideoUrls(source)
         }
 
-        // TODO(1.6): Remove after ext lib bump
+        // TODO(16): Remove after ext lib bump
         private suspend fun List<Video>.parseVideoUrls(source: AnimeHttpSource): List<Video> {
             return this.map { video ->
                 if (video.videoUrl != "null") return@map video

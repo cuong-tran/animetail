@@ -367,7 +367,7 @@ fun PlayerControls(
                 AnimatedVisibility(
                     visible =
                     // AY -->
-                    ((controlsShown && !areControlsLocked) || gestureSeekAmount != null) ||
+                    (controlsShown && !areControlsLocked) || gestureSeekAmount != null ||
                         // <-- AY
                         // ANK -->
                         isLoading ||
