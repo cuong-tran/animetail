@@ -352,6 +352,10 @@ class MangaCoverFetcher(
         force: Boolean = false,
     ) {
         if (!preloadLibraryColor) return
+        // ANK -->
+        // Cover ratio & colors must not be derived from a background image
+        if (options.useBackground) return
+        // ANK <--
         scope.launch {
             MangaCoverMetadata.setRatioAndColors(mangaCover, bufferedSource, ogFile, onlyFavorite, force)
         }
