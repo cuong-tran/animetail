@@ -15,10 +15,15 @@ class MangaKeyer : Keyer<DomainManga> {
         // AY -->
         return when {
             options.useBackground && data.hasCustomBackground() -> "${data.id};${data.backgroundLastModified}"
-            options.useBackground -> "${data.backgroundUrl};${data.backgroundLastModified}"
+            // ANK -->
+            options.useBackground ->
+                "${data.backgroundUrl.orKeyOf("background-none", data.id)};${data.backgroundLastModified}"
+            // ANK <--
             // <-- AY
             data.hasCustomCover() -> "${data.id};${data.coverLastModified}"
-            else -> "${data.thumbnailUrl};${data.coverLastModified}"
+            // ANK -->
+            else -> "${data.thumbnailUrl.orKeyOf("cover-none", data.id)};${data.coverLastModified}"
+            // ANK <--
         }
     }
 }
@@ -30,7 +35,20 @@ class MangaCoverKeyer(
         return if (coverCache.getCustomCoverFile(data.mangaId).exists()) {
             "${data.mangaId};${data.lastModified}"
         } else {
-            "${data.url};${data.lastModified}"
+            // ANK -->
+            "${data.url.orKeyOf("cover-none", data.mangaId)};${data.lastModified}"
+            // ANK <--
         }
     }
 }
+
+// ANK -->
+/**
+ * Entries without a cover/background would all resolve to the very same cache key (ie. `"null;0"`),
+ * so Coil's memory & disk cache would happily serve an unrelated entry's image for any of them.
+ * Fall back to an id based key to keep every entry unique.
+ */
+private fun String?.orKeyOf(prefix: String, id: Long): String {
+    return if (isNullOrEmpty()) "$prefix;$id" else this
+}
+// ANK <--
